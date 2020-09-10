@@ -52,8 +52,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class Home extends React.Component {
-  static navigationOptions = {
+export default class Home extends React.Component 
+{
+  static navigationOptions = 
+  {
     title: 'Menu',
     headerStyle: {
       backgroundColor: '#03A9F4',
@@ -64,7 +66,8 @@ export default class Home extends React.Component {
     },
   };
 
-  render() {
+  render()
+  {
     return (
       <View style={styles.container}>
         <TouchableOpacity

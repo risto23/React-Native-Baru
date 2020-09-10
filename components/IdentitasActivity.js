@@ -1,3 +1,10 @@
+/* eslint-disable no-lone-blocks */
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-alert */
+/* eslint-disable no-unused-vars */
+/* eslint-disable prettier/prettier */
 //import React from 'react';
 import React, {useState, useEffect, useRef} from 'react';
 import {
@@ -5,54 +12,44 @@ import {
   Text,
   View,
   TextInput,
+  Button,
   TouchableOpacity,
   CheckBox,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
+import {LookupModal} from 'react-native-lookup-modal';
+import PhotoComponent from './PhotoComponent.js'
+import ButtonComponent from './ButtonComponent'
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    backgroundColor: '#fff'
+import ImagePicker from "react-native-image-picker";
+
+let users = [
+  {
+    id: 1,
+    name: 'Kristen Protestan',
   },
-  namaPahlawan: {
-    color: 'red',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10
+  {
+    id: 2,
+    name: 'Katolik',
   },
-  asal: {
-    fontSize: 18,
+  {
+    id: 3,
+    name: 'Hindu',
   },
-  textInput: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 5,
-    margin: 10,
-    paddingLeft: 10,
-    fontSize: 18
+
+  {
+    id: 4,
+    name: 'Buddha',
   },
-  btn: {
-    backgroundColor: '#0fa0d1',
-    height: 50,
-    margin: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  }
-});
+];
+
+const App = () => {
+const [isSelected, setSelection] = useState(false);
+}
+//var tempCheckValues = [];
 
 export default class IdentitasActivity extends React.Component {
-  //Menginisialisasi state nama dan asal.
+  //Menginisialisasi state.
   constructor(props) {
     super(props)
 
@@ -65,7 +62,33 @@ export default class IdentitasActivity extends React.Component {
       androidDate: `${new Date().getUTCDate()}/${
         new Date().getUTCMonth() + 1
       }/${new Date().getUTCFullYear()}`,
+      agama: ' ',
+      uploadSource: null,
     };
+  }
+
+  selectPhotoTapped() {
+    const options = {
+    quality: 1.0,
+    maxWidth: 50,
+    maxHeight: 500,
+    storageOptions: {
+    skipBackup: true
+    }
+    };
+    ImagePicker.showImagePicker(options, response => {
+    console.log("Response = ", response);
+    if (response.didCancel) {
+    console.log("User cancelled photo picker");
+    } else if (response.error) {
+    console.log("ImagePicker Error: ", response.error);
+    } else {
+    let source = { uri: response.uri };
+    this.setState({
+    uploadSource: source
+    });
+    }
+    });
   }
 
   //Get current Timestamp
@@ -92,6 +115,7 @@ export default class IdentitasActivity extends React.Component {
       WaktuOBJ: this.state.tanggal,
       dateOBJ: this.state.date,
       kelaminOBJ: this.state.option,
+      agamaOBJ : this.state.agama,
     });
     this.setState({TextInput_nama: '', TextInput_asal: ''});
   };
@@ -115,13 +139,7 @@ export default class IdentitasActivity extends React.Component {
     two: false,
   };
 
-  onepressed(option) {
-    this.setState({one: true, two: false, option: option});
-  }
 
-  twopressed(option) {
-    this.setState({one: false, two: true, option: option});
-  }
 
   render() {
     return (
@@ -167,17 +185,29 @@ export default class IdentitasActivity extends React.Component {
             this.setState({date: date});
           }}
         />
+        
+        <CheckBox
+          value={this.isSelected}
+          onValueChange={this.setSelection}
+        />
+         <Text style={styles.label}>Hobby</Text>
+      <Text>Is CheckBox selected: {this.isSelected ? "👍" : "👎"}</Text>
 
-        <Text>Jenis Kelamin</Text>
-        <CheckBox
-          checked={this.state.one}
-          onPress={() => this.onepressed('pria')}
-          style={{marginRight: 20}}></CheckBox>
-        <Text>Pria</Text>
-        <CheckBox
-          checked={this.state.two}
-          onPress={() => this.twopressed('wanita')}
-          style={{marginRight: 20}}></CheckBox>
+        <Text>Agama</Text>
+        <LookupModal style={styles.model}
+          data={users}
+          onSelect={(item) => {
+            {
+              this.setState({agama: item.name});
+            }
+          }}
+          displayKey={'name'}
+          selectText={this.state.agama}
+        />
+        
+        <PhotoComponent />
+<ButtonComponent onPress={this.selectPhotoTapped.bind(this)}/>
+
 
         {/* Tombol untuk mengirimkan data ke activity lain. */}
         <TouchableOpacity
@@ -197,3 +227,54 @@ export default class IdentitasActivity extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+  namaPahlawan: {
+    color: 'red',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  asal: {
+    fontSize: 18,
+  },
+  textInput: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+    margin: 10,
+    paddingLeft: 10,
+    fontSize: 18,
+  },
+  btn: {
+    backgroundColor: '#0fa0d1',
+    height: 50,
+    margin: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    marginBottom: 50,
+  },
+  model :{
+marginBottom:20
+  },
+  checkbox: {
+    alignSelf: "center",
+  },
+});

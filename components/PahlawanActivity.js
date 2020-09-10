@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-class Pahlawan extends React.Component {
+class Pahlawan extends React.Component 
+{
   render() {
     return (
       <View style={{alignItems: 'center'}}>
@@ -23,7 +24,8 @@ class Pahlawan extends React.Component {
   }
 }
 
-export default class PahlawanActivity extends React.Component {
+export default class PahlawanActivity extends React.Component 
+{
   //Menginisialisasi state pahlawan, nama dan asal.
   state = {
     pahlawan: [
@@ -67,7 +69,8 @@ export default class PahlawanActivity extends React.Component {
     this.setState({pahlawan, nama: '', asal: ''});
   };
 
-  static navigationOptions = {
+  static navigationOptions = 
+  {
     title: 'Pahlawan',
     headerStyle: {
       backgroundColor: '#03A9F4',
