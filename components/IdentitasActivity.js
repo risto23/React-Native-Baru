@@ -14,12 +14,10 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
-  CheckBox,
+  
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import {LookupModal} from 'react-native-lookup-modal';
-
-import ImagePicker from "react-native-image-picker";
+import { Container, Header, Content, ListItem, Radio, Right, Left,Icon, Picker, Form,CheckBox,Body  } from 'native-base'
 
 let users = [
   {
@@ -41,10 +39,10 @@ let users = [
   },
 ];
 
-const App = () => {
-const [isSelected, setSelection] = useState(false);
-}
-//var tempCheckValues = [];
+const radioItem = [
+  { label: 'Female', value: 'female' },
+  { label: 'Male', value: 'male' }
+];
 
 export default class IdentitasActivity extends React.Component {
   //Menginisialisasi state.
@@ -61,41 +59,52 @@ export default class IdentitasActivity extends React.Component {
         new Date().getUTCMonth() + 1
       }/${new Date().getUTCFullYear()}`,
       agama: ' ',
-      filePath: {}
+      selected: "key2",
+      one: false,
+      two: false,
+      three: false,
+      itemSelected: 'itemOne',
     };
   }
 
-  chooseFile = () => {
-    var options = {
-      title: 'Select Image',
-      customButtons: [
-        { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
-      ],
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
+//Checkbox
+  onePressed() {
+    if (this.state.one)
+      this.setState({ one: false });
+    else
+      this.setState({ one: true});
+  }
+//Checkbox
+  twoPressed() {
+    if (this.state.two)
+      this.setState({ two: false });
+    else
+      this.setState({ two: true });
+  }
+//Checkbox
+  threePressed() {
+    if (this.state.three)
+      this.setState({ three: false });
+    else
+      this.setState({ three: true });
+  }
 
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        let source = response;
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          filePath: source,
-        });
-      }
+  onValueChange(value: string) {
+    this.setState({
+      selected: value
     });
-  };
+  }
+  //radio button
+  onRadioButtonPressed(value: string, status: string){
+    if(status == 'true'){
+    this.setState({
+      dipilih: true,
+      color:"#5cb85c",
+      itemSelected: value,
+    });
+  }
+  }
+ 
   //Get current Timestamp
   componentDidMount() {
     var that = this;
@@ -136,14 +145,6 @@ export default class IdentitasActivity extends React.Component {
     },
   };
 
-  tampilkan = () => {
-    alert('Nama : ' + this.state.nama + '\n' + 'asal : ' + this.state.asal);
-  };
-  state = {
-    one: false,
-    two: false,
-  };
-
 
 
   render() {
@@ -164,6 +165,8 @@ export default class IdentitasActivity extends React.Component {
             this.setState({asal: text});
           }}
         />
+
+        {/* datepicker */}
 
         <DatePicker
           style={{width: 200}}
@@ -190,45 +193,67 @@ export default class IdentitasActivity extends React.Component {
             this.setState({date: date});
           }}
         />
+       
+        {/* Radio Button */}
+      
+
+        {/* Picker */} 
+        <Picker
+              mode="dropdown"
+              iosIcon={<Icon name="arrow-down" />}
+              headerStyle={{ backgroundColor: "#b95dd3" }}
+              headerBackButtonTextStyle={{ color: "#fff" }}
+              headerTitleStyle={{ color: "#fff" }}
+              selectedValue={this.state.selected}
+              onValueChange={this.onValueChange.bind(this)}
+            >
+              <Picker.Item label="Wallet" value="key0" />
+              <Picker.Item label="ATM Card" value="key1" />
+              <Picker.Item label="Debit Card" value="key2" />
+              <Picker.Item label="Credit Card" value="key3" />
+              <Picker.Item label="Net Banking" value="key4" />
+            </Picker>
+
+            {/* Checkbox */}
+   
+        <CheckBox checked={this.state.one}
+            style={{ marginRight: 20 }}
+            onPress={this.onePressed.bind(this)}/>
+          <Text>One</Text>
+          <CheckBox checked={this.state.two}
+            style={{ marginRight: 20 }}
+            onPress={this.twoPressed.bind(this)}/>
+          <Text>Two</Text>
         
-        <CheckBox
-          value={this.isSelected}
-          onValueChange={this.setSelection}
-        />
-         <Text style={styles.label}>Hobby</Text>
-      <Text>Is CheckBox selected: {this.isSelected ? "👍" : "👎"}</Text>
-
-        <Text>Agama</Text>
-        <LookupModal style={styles.model}
-          data={users}
-          onSelect={(item) => {
+          <CheckBox checked={this.state.three}
+            style={{ marginRight: 20 }}
+            onPress={this.threePressed.bind(this)}/>
+          <Text>Three</Text>
+          <Content>
+        <Text>Select your choice</Text>
+          {
+            radioItem.map((data, key) => 
             {
-              this.setState({agama: item.name});
+                return (
+                          <ListItem key={key}>
+                             <Left>
+                                <Text>{data.label}</Text>
+                            </Left>
+                            <Right>
+                              <Radio
+                              onPress={()=> this.setState({radioValue:data.value})}
+                              color={"gray"}
+                              selectedColor={"gray"}
+                              selected={data.value === this.state.radioValue}
+                              />
+                            </Right>
+                          </ListItem>
+                        )
+            })
             }
-          }}
-          displayKey={'name'}
-          selectText={this.state.agama}
-        />
-      {/*kamera*/}
- {/*<Image 
-          source={{ uri: this.state.filePath.path}} 
-          style={{width: 100, height: 100}} />*/}
-          {/*<Image
-            source={{
-              uri: 'data:image/jpeg;base64,' + this.state.filePath.data,
-            }}
-            style={{ width: 100, height: 100 }}
-          />
-          <Image
-            source={{ uri: this.state.filePath.uri }}
-            style={{ width: 250, height: 250 }}
-          />
-          <Text style={{ alignItems: 'center' }}>
-            {this.state.filePath.uri}
-          </Text>
-          <Button title="Choose File" onPress={this.chooseFile.bind(this)} />*}
+        </Content>
 
-        {/* Tombol untuk mengirimkan data ke activity lain. */}
+      
         <TouchableOpacity
           onPress={this.Kirim_data}
           activeOpacity={0.7}
