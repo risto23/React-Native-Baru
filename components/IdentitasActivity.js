@@ -213,7 +213,7 @@ export default class IdentitasActivity extends React.Component {
  {/*<Image 
           source={{ uri: this.state.filePath.path}} 
           style={{width: 100, height: 100}} />*/}
-          <Image
+          {/*<Image
             source={{
               uri: 'data:image/jpeg;base64,' + this.state.filePath.data,
             }}
@@ -226,8 +226,8 @@ export default class IdentitasActivity extends React.Component {
           <Text style={{ alignItems: 'center' }}>
             {this.state.filePath.uri}
           </Text>
-          <Button title="Choose File" onPress={this.chooseFile.bind(this)} />
-          
+          <Button title="Choose File" onPress={this.chooseFile.bind(this)} />*}
+
         {/* Tombol untuk mengirimkan data ke activity lain. */}
         <TouchableOpacity
           onPress={this.Kirim_data}
